@@ -1,0 +1,77 @@
+function main(workbook: ExcelScript.Workbook, date1: string) {
+    
+    const lastRow = workbook.getWorksheet('Rejestr').getUsedRange(true).getLastRow().getRowIndex();
+    const adr1 = 'B2:N' + lastRow;
+    // console.log('workbook.getWorksheet Rejestr adr1 : ' + adr1); // OK
+    let rng = workbook.getWorksheet('Rejestr').getRange(adr1);
+    let rows1 = rng.getValues();
+
+
+    let arr: IData[] = [];
+    let today1: string;
+    today1 = '' + workbook.getWorksheet('TODAY').getCell(0, 0).getValue();
+
+    let date1_to_string: number;
+    date1_to_string = parseInt(date1)
+
+    let i = 0;
+    for(let r of rows1) {
+
+        let [x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13] = r;
+
+        //if( i == 100) {
+        //    console.log(JSON.stringify(r));
+        //}
+
+        let tmpTxt: string;
+        tmpTxt = '' + x05;
+        if (tmpTxt.includes('CELNY') || tmpTxt.includes('KRAJOWY') || tmpTxt.includes('UNIJNY') || tmpTxt == '') {
+        } else {
+
+            if (x12 == date1_to_string) {
+
+                arr.push({
+                    num: x01 as string,
+                    numCorail: x02 as string,
+                    plates: x03 as string,
+                    phone: x04 as string,
+                    unloadingNumber: x05 as string,
+                    customs: x06 as string,
+                    routeName: x07 as string,
+                    dock: x08 as string,
+                    regDate: x10 as string,
+                    regTime: x09 as string,
+                    unloadingDate: x12 as string,
+                    unloadingTime: x11 as string,
+                    who: x13 as string
+                });
+            }
+        }
+
+
+        i++;
+    }
+
+
+    // console.log( arr[2] ); // TEST OK
+    return arr;
+  
+}
+
+
+
+interface IData {
+    num: string
+    numCorail: string
+    plates: string
+    phone: string
+    unloadingNumber: string
+    customs: string
+    routeName: string
+    dock: string
+    regDate: string
+    regTime: string
+    unloadingDate: string
+    unloadingTime: string 
+    who: string
+}
